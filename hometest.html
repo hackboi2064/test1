@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Test</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Additional styles for ThinkSpeak section */
+    .thinkSpeak-section {
+      margin-top: 50px;
+      text-align: center;
+    }
+    .thinkSpeak-section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .data-box {
+      padding: 20px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      display: inline-block;
+      border-radius: 5px;
+      width: 150px;
+    }
+    .data-box h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="info-panel">
+      <div class="info-item">Battery charged <span class="data-circle" id="battery">85%</span></div>
+      <div class="info-item">Time since last cleaned <span class="data-circle" id="last-cleaned">2 days</span></div>
+      <div class="info-item">Cleaning time interval <span class="data-circle" id="cleaning-interval">7 days</span></div>
+    </div>
+    <div class="weather-section">
+      <img src="sun.png" alt="Sun Icon" class="sun-icon" />
+      <div id="time" class="time">12:34 PM</div>
+    </div>
+  </div>
+
+  <!-- ThinkSpeak Sensor Data Section -->
+  <div class="thinkSpeak-section">
+    <h2>Real-Time Sensor Data from ThinkSpeak</h2>
+    <div class="data-box">
+      <h3>Temperature</h3>
+      <p id="ts-temperature">Loading...</p>
+    </div>
+    <div class="data-box">
+      <h3>Humidity</h3>
+      <p id="ts-humidity">Loading...</p>
+    </div>
+    <div class="data-box">
+      <h3>Voltage</h3>
+      <p id="ts-voltage">Loading...</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // ThinkSpeak Data Fetching Script
+    const channelID = "2898773";  // Your ThinkSpeak Channel ID
+    const apiKey = "VYGE0P5GU3QGGBTV"; // Your ThinkSpeak Read API Key
+    const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=1`;
+
+    async function fetchThinkSpeakData() {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const lastEntry = data.feeds[data.feeds.length - 1];
+
+        document.getElementById("ts-temperature").innerText = lastEntry.field1 + " °C";
+        document.getElementById("ts-humidity").innerText = lastEntry.field2 + " %";
+        document.getElementById("ts-voltage").innerText = lastEntry.field3 + " V";
+      } catch (error) {
+        console.error("Error fetching ThinkSpeak data:", error);
+      }
+    }
+
+    fetchThinkSpeakData();
+    setInterval(fetchThinkSpeakData, 2000); // Refresh data every 2 seconds
+  </script>
+</body>
+</html>
