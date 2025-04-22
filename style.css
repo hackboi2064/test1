@@ -1,91 +1,104 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-  }
-  
-  .login-container {
-    width: 300px;
-    margin: 100px auto;
-    padding: 20px;
-    background: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background: blue;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  button:hover {
-    background: darkblue;
-  }
-  
-  #error-message {
-    color: red;
-    font-size: 14px;
-  }
-  
-  .dashboard {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 50px;
-  }
-  
-  .info-panel {
-    background: #ccc;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .info-item {
-    background: #007bff;
-    color: white;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .data-circle {
-    width: 40px;
-    height: 40px;
-    background: lightblue;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: black;
-  }
-  
-  .weather-section {
-    text-align: center;
-  }
-  
-  .sun-icon {
-    width: 100px;
-  }
-  
-  .time {
-    font-size: 24px;
-    font-style: italic;
-  }
-  
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #ffe6ec, #ffffff);
+  color: #333;
+}
+
+.login-container {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #ff5e7d;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background: #e14c6c;
+}
+#error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.navbar {
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+.logo span {
+  color: #ff5e7d;
+}
+nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 50px;
+}
+.hero-text h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+.hero-text span {
+  color: #ff5e7d;
+}
+
+.sensor-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 200px;
+}
+.card h3 {
+  margin: 0 0 10px;
+  color: #ff5e7d;
+}
+
+.toggle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: lightblue;
+  border-radius: 50%;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  background: white;
+  margin-top: 40px;
+}
