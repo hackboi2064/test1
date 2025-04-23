@@ -1,58 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo">Smart<span>Dash</span></div>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
 
-    <section class="hero-section">
-        <div class="hero-text">
-            <h1>Sensor <span>Dashboard</span></h1>
-            <p>Live data updates every 2 seconds</p>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">Smart<span>Dash</span></div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-text">
+      <h1>Sensor <span>Dashboard</span></h1>
+      <p>Live data updates every 2 seconds</p>
+    </div>
+
+    <!-- Sensor Cards -->
+    <div class="sensor-cards">
+
+      <!-- Temperature Card -->
+      <div class="card">
+        <h3>
+          Temperature
+          <button class="toggle-arrow">▼</button>
+        </h3>
+        <p id="temperature">Loading...</p>
+        <div class="graph-container">
+          <iframe
+            src="https://thingspeak.com/channels/2898773/charts/2?bgcolor=%23ffffff&color=%23ff5e7d&dynamic=true">
+          </iframe>
         </div>
-        <div class="sensor-cards">
-            <div class="card">
-                <h3>Temperature</h3>
-                <p id="temperature">Loading...</p>
-            </div>
-            <div class="card">
-                <h3>Humidity</h3>
-                <p id="humidity">Loading...</p>
-            </div>
-            <div class="card">
-                <h3>Solar Panel Voltage</h3>
-                <p id="voltage">Loading...</p>
-            </div>
-            <div class="card">
-                <h3>Battery Charged</h3>
-                <span class="toggle"></span>
-            </div>
-            <div class="card">
-                <h3>Time since last cleaned</h3>
-                <span class="toggle"></span>
-            </div>
-            <div class="card">
-                <h3>Cleaning time interval</h3>
-                <span class="toggle"></span>
-            </div>
+      </div>
+
+      <!-- Humidity Card -->
+      <div class="card">
+        <h3>
+          Humidity
+          <button class="toggle-arrow">▼</button>
+        </h3>
+        <p id="humidity">Loading...</p>
+        <div class="graph-container">
+          <iframe
+            src="https://thingspeak.com/channels/2898773/charts/1?bgcolor=%23ffffff&color=%23007BFF&dynamic=true">
+          </iframe>
         </div>
-    </section>
+      </div>
 
-    <footer>
-        <p>© 2025 SmartDash</p>
-    </footer>
+      <!-- Solar Panel Voltage Card -->
+      <div class="card">
+        <h3>
+          Solar Panel Voltage
+          <button class="toggle-arrow">▼</button>
+        </h3>
+        <p id="voltage">Loading...</p>
+        <div class="graph-container">
+          <iframe
+            src="https://thingspeak.com/channels/2898773/charts/3?bgcolor=%23ffffff&color=%23FFC107&dynamic=true">
+          </iframe>
+        </div>
+      </div>
 
-    <script src="script.js"></script>
+      <!-- LDR Left Card -->
+      <div class="card">
+        <h3>
+          LDR Left
+          <button class="toggle-arrow">▼</button>
+        </h3>
+        <p id="ldrLeft">Loading...</p>
+        <div class="graph-container">
+          <iframe
+            src="https://thingspeak.com/channels/2898773/charts/4?bgcolor=%23ffffff&color=%2300C853&dynamic=true">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- LDR Right Card -->
+      <div class="card">
+        <h3>
+          LDR Right
+          <button class="toggle-arrow">▼</button>
+        </h3>
+        <p id="ldrRight">Loading...</p>
+        <div class="graph-container">
+          <iframe
+            src="https://thingspeak.com/channels/2898773/charts/5?bgcolor=%23ffffff&color=%23E91E63&dynamic=true">
+          </iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 SmartDash</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // 1. LIVE DATA FETCH
+    const channelID = "2898773";
+    const apiKey    = "VYGE0P5GU3QGGBTV";
+    const url       = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=1`;
+
+    async function fetchData() {
+      try {
+        const resp = await fetch(url);
+        const json = await resp.json();
+        const le   = json.feeds.pop();
+
+        document.getElementById("temperature").innerText = le.field2 + " °C";
+        document.getElementById("humidity").innerText    = le.field1 + " %";
+        document.getElementById("voltage").innerText     = le.field3 + " V";
+        document.getElementById("ldrLeft").innerText     = le.field4;
+        document.getElementById("ldrRight").innerText    = le.field5;
+      } catch (e) {
+        console.error("Fetch error:", e);
+      }
+    }
+    fetchData();
+    setInterval(fetchData, 2000);
+
+    // 2. TOGGLE EXPAND + SHRINK OTHERS
+    function toggleCard(card, btn) {
+      const all = document.querySelectorAll('.sensor-cards .card');
+      const opening = !card.classList.contains('open');
+
+      all.forEach(c => {
+        c.classList.remove('open','shrink');
+        c.querySelector('.toggle-arrow').classList.remove('rotate');
+      });
+
+      if (opening) {
+        card.classList.add('open');
+        btn.classList.add('rotate');
+        all.forEach(c => { if (c !== card) c.classList.add('shrink'); });
+      }
+    }
+
+    document.querySelectorAll('.toggle-arrow').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.card');
+        toggleCard(card, btn);
+      });
+    });
+  </script>
 </body>
 </html>

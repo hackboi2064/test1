@@ -1,3 +1,4 @@
+// LOGIN VALIDATION
 function validateLogin() {
   var username = document.getElementById("username").value;
   var password = document.getElementById("password").value;
@@ -12,14 +13,7 @@ function validateLogin() {
   }
 }
 
-function updateTime() {
-  var now = new Date();
-  var timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-  const timeElement = document.getElementById("time");
-  if (timeElement) timeElement.innerText = timeString;
-}
-setInterval(updateTime, 1000);
-
+// LIVE DATA FETCH FROM THINGSPEAK
 const channelID = "2898773";
 const apiKey = "VYGE0P5GU3QGGBTV";
 const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=1`;
@@ -30,12 +24,43 @@ async function fetchData() {
       const data = await response.json();
       const lastEntry = data.feeds[data.feeds.length - 1];
 
-      document.getElementById("temperature").innerText = lastEntry.field1 + " °C";
-      document.getElementById("humidity").innerText = lastEntry.field2 + " %";
+      document.getElementById("temperature").innerText = lastEntry.field2 + " °C";
+      document.getElementById("humidity").innerText = lastEntry.field1 + " %";
       document.getElementById("voltage").innerText = lastEntry.field3 + " V";
+      document.getElementById("ldrLeft").innerText = lastEntry.field4;
+      document.getElementById("ldrRight").innerText = lastEntry.field5;
   } catch (error) {
       console.error("Error fetching data:", error);
   }
 }
 fetchData();
 setInterval(fetchData, 2000);
+
+// CARD EXPAND / COLLAPSE FUNCTIONALITY
+function toggleCard(card, btn) {
+  const allCards = document.querySelectorAll('.sensor-cards .card');
+  const isOpening = !card.classList.contains('open');
+
+  // Reset all
+  allCards.forEach(c => {
+      c.classList.remove('open', 'shrink');
+      c.querySelector('.toggle-arrow').classList.remove('rotate');
+  });
+
+  if (isOpening) {
+      card.classList.add('open');
+      btn.classList.add('rotate');
+      allCards.forEach(c => {
+          if (c !== card) c.classList.add('shrink');
+      });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.toggle-arrow').forEach(btn => {
+      btn.addEventListener('click', () => {
+          const card = btn.closest('.card');
+          toggleCard(card, btn);
+      });
+  });
+});
